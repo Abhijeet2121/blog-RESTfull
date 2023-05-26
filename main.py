@@ -9,7 +9,7 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
 from functools import wraps
-
+from netlify import NetlifyClient
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 ckeditor = CKEditor(app)
@@ -207,5 +207,10 @@ def delete_post(post_id):
 def logout():
     logout_user()
     return redirect(url_for('get_all_posts'))
+
+access_token = "hfNllE-mSyxrJLFYLl8FHGWTtNVQm8KFvEpNnNwH32c"
+client =NetlifyClient(access_token=access_token)
+client.get_current_user()
+client.create_site_deploy("site-id", "path/to/zip/file.zip")
 # if __name__ == "__main__":
 #     app.run(debug=True, host='localhost', port=5000)
