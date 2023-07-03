@@ -9,16 +9,19 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
 from functools import wraps
-from netlify import NetlifyClient
+import os 
+
+SECRET_KEY = "'8BYkEfBA6O6donzWlSihBXox7C0sKR6b'"
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+# app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
+app.config['SECRET_KEY'] = SECRET_KEY
 ckeditor = CKEditor(app)
 Bootstrap(app)
 gravatar = Gravatar(app, size=20, rating='g',default='retro', force_default=False, 
                    force_lower=False, use_ssl=False, base_url=None)
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','sqlite:///blog.db')
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy()
@@ -208,9 +211,9 @@ def logout():
     logout_user()
     return redirect(url_for('get_all_posts'))
 
-access_token = "hfNllE-mSyxrJLFYLl8FHGWTtNVQm8KFvEpNnNwH32c"
-client =NetlifyClient(access_token=access_token)
-client.get_current_user()
-client.create_site_deploy("site-id", "path/to/zip/file.zip")
-# if __name__ == "__main__":
-#     app.run(debug=True, host='localhost', port=5000)
+# access_token = "hfNllE-mSyxrJLFYLl8FHGWTtNVQm8KFvEpNnNwH32c"
+# client =NetlifyClient(access_token=access_token)
+# client.get_current_user()
+# client.create_site_deploy("site-id", "path/to/zip/file.zip")
+if __name__ == "__main__":
+    app.run(debug=True, host='localhost', port=5000)
